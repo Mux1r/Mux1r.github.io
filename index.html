@@ -42,6 +42,7 @@
     color: #e2e8f0;
     overflow: hidden;
     display: flex;
+    transition: background 1.4s cubic-bezier(0.4,0,0.2,1);
   }
 
   body::before, body::after {
@@ -406,6 +407,17 @@ function repoColor(name) {
   return `hsl(${h},65%,62%)`;
 }
 
+function updateBg(list) {
+  if (!list.length) return;
+  const step = Math.max(1, Math.floor(list.length / 4));
+  const picks = [0, step, step*2, step*3].map(i => list[Math.min(i, list.length-1)].name);
+  const stops = picks.map((name, i) => {
+    const h = [...name].reduce((a,c) => (a*31 + c.charCodeAt(0)) % 360, 0);
+    return `hsl(${h} 40% 12%) ${i * 33}%`;
+  });
+  document.body.style.background = `linear-gradient(135deg, ${stops.join(', ')})`;
+}
+
 let repos = [];
 
 async function load() {
@@ -457,6 +469,7 @@ function card(r, i) {
 
 function render(list) {
   document.getElementById('count').textContent = list.length + ' 個 repo';
+  updateBg(list);
   const grid = document.getElementById('grid');
   if (!list.length) { grid.innerHTML = '<div id="empty">找不到符合的 repo</div>'; return; }
   grid.innerHTML = list.map((r,i) => card(r,i)).join('');
