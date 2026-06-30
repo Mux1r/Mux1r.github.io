@@ -42,7 +42,14 @@
     color: #e2e8f0;
     overflow: hidden;
     display: flex;
-    transition: background 1.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* repo hover background — opacity crossfade for silky smooth transition */
+  #bg-overlay {
+    position: fixed; inset: 0; z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2.2s cubic-bezier(0.4,0,0.2,1);
   }
 
   body::before, body::after {
@@ -366,6 +373,7 @@
 </head>
 <body>
 
+<div id="bg-overlay"></div>
 <div id="intro">
   <div class="intro-logo">Mux1r</div>
   <div class="intro-bar"></div>
@@ -407,13 +415,22 @@ function repoColor(name) {
   return `hsl(${h},65%,62%)`;
 }
 
-const DEFAULT_BG = 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)';
+const overlay = document.getElementById('bg-overlay');
 
-function repoBg(name) {
+function repoGradient(name) {
   const h = [...name].reduce((a,c) => (a*31 + c.charCodeAt(0)) % 360, 0);
-  const h2 = (h + 40) % 360;
-  const h3 = (h + 80) % 360;
-  return `linear-gradient(135deg, hsl(${h} 45% 10%) 0%, hsl(${h2} 40% 14%) 50%, hsl(${h3} 35% 11%) 100%)`;
+  // triadic: 0° / 120° / 240° — clean, saturated, dark enough to read text
+  const h2 = (h + 120) % 360;
+  const h3 = (h + 240) % 360;
+  return `radial-gradient(ellipse at top left, hsl(${h} 70% 16%) 0%, hsl(${h2} 60% 11%) 50%, hsl(${h3} 65% 14%) 100%)`;
+}
+
+function setBg(name) {
+  overlay.style.background = repoGradient(name);
+  overlay.style.opacity = '1';
+}
+function clearBg() {
+  overlay.style.opacity = '0';
 }
 
 let repos = [];
@@ -439,7 +456,7 @@ async function load() {
 function card(r, i) {
   const color = repoColor(r.name);
   return `
-  <div class="card" onclick="window.open('${r.html_url}','_blank')" onmouseenter="document.body.style.background='${repoBg(r.name)}'" onmouseleave="document.body.style.background=DEFAULT_BG" style="animation-delay:${i*0.045}s;--c:${color}">
+  <div class="card" onclick="window.open('${r.html_url}','_blank')" onmouseenter="setBg('${r.name}')" onmouseleave="clearBg()" style="animation-delay:${i*0.045}s;--c:${color}">
     <div class="card-name">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
       ${r.name}
