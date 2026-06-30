@@ -8,14 +8,14 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    min-height: 100vh;
+    height: 100vh;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
     color: #e2e8f0;
-    overflow-x: hidden;
+    overflow: hidden;
+    display: flex;
   }
 
-  /* animated background orbs */
   body::before, body::after {
     content: '';
     position: fixed;
@@ -24,6 +24,7 @@
     opacity: 0.15;
     pointer-events: none;
     animation: drift 12s ease-in-out infinite alternate;
+    z-index: 0;
   }
   body::before {
     width: 600px; height: 600px;
@@ -37,127 +38,170 @@
     animation-direction: alternate-reverse;
   }
   @keyframes drift {
-    from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(60px, 40px) scale(1.1); }
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(60px,40px) scale(1.1); }
   }
 
-  header {
-    text-align: center;
-    padding: 72px 24px 48px;
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 48px 28px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(24px);
     position: relative;
+    z-index: 1;
   }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 
   .avatar {
-    width: 88px; height: 88px;
+    width: 96px; height: 96px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.25);
-    margin: 0 auto 20px;
+    border: 2px solid rgba(255,255,255,0.2);
     display: block;
-    backdrop-filter: blur(10px);
   }
 
   h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: 1.8rem;
     font-weight: 700;
     background: linear-gradient(135deg, #a78bfa, #60a5fa, #f0abfc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     letter-spacing: -0.02em;
+    line-height: 1.2;
   }
 
   .subtitle {
-    margin-top: 8px;
-    font-size: 1rem;
-    color: rgba(226,232,240,0.55);
+    font-size: 0.85rem;
+    color: rgba(226,232,240,0.45);
     letter-spacing: 0.05em;
+    margin-top: 4px;
   }
 
   .github-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 20px;
-    padding: 8px 20px;
+    padding: 9px 16px;
     border-radius: 999px;
     background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.14);
     color: rgba(226,232,240,0.8);
     text-decoration: none;
-    font-size: 0.875rem;
-    backdrop-filter: blur(12px);
+    font-size: 0.82rem;
     transition: background 0.2s, transform 0.2s;
+    width: fit-content;
   }
   .github-link:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
 
-  .stats-bar {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    margin-top: 36px;
-    font-size: 0.8rem;
-    color: rgba(226,232,240,0.45);
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
   }
-  .stat span { color: rgba(226,232,240,0.85); font-weight: 600; }
+  .stat-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 12px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .stat-box .num {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #c4b5fd;
+  }
+  .stat-box .label {
+    display: block;
+    font-size: 0.68rem;
+    color: rgba(226,232,240,0.4);
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
 
   .search-wrap {
-    max-width: 500px;
-    margin: 0 auto 40px;
-    padding: 0 24px;
     position: relative;
   }
   .search-wrap svg {
     position: absolute;
-    left: 40px; top: 50%;
+    left: 14px; top: 50%;
     transform: translateY(-50%);
     opacity: 0.4;
     pointer-events: none;
   }
   #search {
     width: 100%;
-    padding: 12px 18px 12px 44px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(16px);
+    padding: 10px 14px 10px 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.13);
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
     color: #e2e8f0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     outline: none;
     transition: border-color 0.2s, background 0.2s;
   }
-  #search:focus { border-color: rgba(167,139,250,0.5); background: rgba(255,255,255,0.1); }
-  #search::placeholder { color: rgba(226,232,240,0.35); }
+  #search:focus { border-color: rgba(167,139,250,0.5); background: rgba(255,255,255,0.09); }
+  #search::placeholder { color: rgba(226,232,240,0.3); }
+
+  .repo-count {
+    font-size: 0.75rem;
+    color: rgba(226,232,240,0.3);
+    text-align: right;
+    margin-top: -16px;
+  }
+
+  /* ── Main ── */
+  .main {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 32px 28px 48px;
+    position: relative;
+    z-index: 1;
+  }
+  .main::-webkit-scrollbar { width: 5px; }
+  .main::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 24px 80px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
   }
 
   .card {
     background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.11);
     border-radius: 16px;
-    padding: 24px;
-    backdrop-filter: blur(20px);
-    text-decoration: none;
-    color: inherit;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     transition: transform 0.25s, background 0.25s, border-color 0.25s, box-shadow 0.25s;
     position: relative;
     overflow: hidden;
-    animation: fadeUp 0.4s ease both;
+    animation: fadeUp 0.35s ease both;
+    cursor: pointer;
   }
   .card:hover {
-    transform: translateY(-6px);
-    background: rgba(255,255,255,0.1);
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.09);
     border-color: rgba(167,139,250,0.4);
-    box-shadow: 0 20px 60px rgba(124,58,237,0.2), 0 0 0 1px rgba(167,139,250,0.15);
+    box-shadow: 0 16px 48px rgba(124,58,237,0.2), 0 0 0 1px rgba(167,139,250,0.12);
   }
   .card::before {
     content: '';
@@ -171,23 +215,23 @@
   .card:hover::before { opacity: 1; }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
+    from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
   .card-name {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: #c4b5fd;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
   }
-  .card-name svg { opacity: 0.6; flex-shrink: 0; }
+  .card-name svg { opacity: 0.55; flex-shrink: 0; }
 
   .card-desc {
-    font-size: 0.85rem;
-    color: rgba(226,232,240,0.55);
+    font-size: 0.82rem;
+    color: rgba(226,232,240,0.5);
     line-height: 1.5;
     flex: 1;
   }
@@ -195,82 +239,74 @@
   .card-footer {
     display: flex;
     align-items: center;
-    gap: 16px;
-    font-size: 0.78rem;
-    color: rgba(226,232,240,0.4);
+    gap: 14px;
+    font-size: 0.75rem;
+    color: rgba(226,232,240,0.38);
     padding-top: 8px;
     border-top: 1px solid rgba(255,255,255,0.07);
+    flex-wrap: wrap;
   }
   .lang-dot {
-    width: 10px; height: 10px;
+    width: 9px; height: 9px;
     border-radius: 50%;
-    background: #7c3aed;
     display: inline-block;
     flex-shrink: 0;
   }
-  .card-footer span { display: flex; align-items: center; gap: 5px; }
+  .card-footer span { display: flex; align-items: center; gap: 4px; }
 
   .tag-fork {
     margin-left: auto;
-    padding: 2px 8px;
+    padding: 2px 7px;
     border-radius: 999px;
-    background: rgba(251,191,36,0.12);
-    color: rgba(251,191,36,0.7);
-    font-size: 0.7rem;
-    border: 1px solid rgba(251,191,36,0.2);
+    background: rgba(251,191,36,0.1);
+    color: rgba(251,191,36,0.65);
+    font-size: 0.68rem;
+    border: 1px solid rgba(251,191,36,0.18);
   }
 
   .btn-pages {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 7px;
     width: 100%;
-    padding: 12px 0;
+    padding: 10px 0;
     border-radius: 10px;
-    background: linear-gradient(135deg, rgba(96,165,250,0.18), rgba(167,139,250,0.18));
-    color: rgba(186,214,254,0.95);
-    font-size: 0.88rem;
+    background: linear-gradient(135deg, rgba(96,165,250,0.16), rgba(167,139,250,0.16));
+    color: rgba(186,214,254,0.92);
+    font-size: 0.83rem;
     font-weight: 600;
     letter-spacing: 0.04em;
-    border: 1px solid rgba(96,165,250,0.3);
+    border: 1px solid rgba(96,165,250,0.28);
     text-decoration: none;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s, border-color 0.2s;
     position: relative;
     overflow: hidden;
-    margin-top: 4px;
+    margin-top: 2px;
   }
   .btn-pages::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(96,165,250,0.15), rgba(167,139,250,0.15));
+    background: linear-gradient(135deg, rgba(96,165,250,0.14), rgba(167,139,250,0.14));
     opacity: 0;
     transition: opacity 0.2s;
     pointer-events: none;
   }
-  .btn-pages:hover {
-    transform: translateY(-2px);
-    border-color: rgba(147,197,253,0.5);
-    box-shadow: 0 6px 24px rgba(96,165,250,0.2);
-  }
+  .btn-pages:hover { transform: translateY(-2px); border-color: rgba(147,197,253,0.45); box-shadow: 0 6px 20px rgba(96,165,250,0.18); }
   .btn-pages:hover::before { opacity: 1; }
 
   #empty {
     grid-column: 1/-1;
     text-align: center;
-    color: rgba(226,232,240,0.35);
-    padding: 60px 0;
+    color: rgba(226,232,240,0.3);
+    padding: 80px 0;
     font-size: 0.9rem;
   }
 
-  .loading {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 80px 0;
-  }
+  .loading { grid-column: 1/-1; text-align: center; padding: 80px 0; }
   .spinner {
-    width: 36px; height: 36px;
+    width: 32px; height: 32px;
     border: 2px solid rgba(167,139,250,0.2);
     border-top-color: #a78bfa;
     border-radius: 50%;
@@ -278,29 +314,45 @@
     margin: 0 auto;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Mobile: stack ── */
+  @media (max-width: 700px) {
+    body { flex-direction: column; height: auto; overflow: auto; }
+    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .main { height: auto; }
+  }
 </style>
 </head>
 <body>
 
-<header>
+<aside class="sidebar">
   <img id="avatar" class="avatar" src="https://github.com/Mux1r.png" alt="Mux1r">
-  <h1>Mux1r</h1>
-  <p class="subtitle">GitHub Projects</p>
+  <div>
+    <h1>Mux1r</h1>
+    <p class="subtitle">GitHub Projects</p>
+  </div>
   <a class="github-link" href="https://github.com/Mux1r" target="_blank" rel="noopener">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
     github.com/Mux1r
   </a>
-  <div class="stats-bar" id="stats"></div>
-</header>
+  <div class="stats-grid" id="stats">
+    <div class="stat-box"><span class="num">—</span><span class="label">Repos</span></div>
+    <div class="stat-box"><span class="num">—</span><span class="label">Stars</span></div>
+    <div class="stat-box"><span class="num">—</span><span class="label">Forks</span></div>
+  </div>
+  <div class="divider"></div>
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="搜尋 repo...">
+  </div>
+  <p class="repo-count" id="count"></p>
+</aside>
 
-<div class="search-wrap">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-  <input id="search" type="text" placeholder="搜尋 repo...">
-</div>
-
-<div class="grid" id="grid">
-  <div class="loading"><div class="spinner"></div></div>
-</div>
+<main class="main">
+  <div class="grid" id="grid">
+    <div class="loading"><div class="spinner"></div></div>
+  </div>
+</main>
 
 <script>
 const LANG_COLORS = {
@@ -318,49 +370,48 @@ async function load() {
     if (!res.ok) throw new Error(res.status);
     repos = (await res.json()).filter(r => r.name !== 'Mux1r.github.io');
 
-    const stats = document.getElementById('stats');
-    stats.innerHTML = `
-      <div>Repos <span>${repos.length}</span></div>
-      <div>Stars <span>${repos.reduce((s,r)=>s+r.stargazers_count,0)}</span></div>
-      <div>Forks <span>${repos.reduce((s,r)=>s+r.forks_count,0)}</span></div>
+    document.getElementById('stats').innerHTML = `
+      <div class="stat-box"><span class="num">${repos.length}</span><span class="label">Repos</span></div>
+      <div class="stat-box"><span class="num">${repos.reduce((s,r)=>s+r.stargazers_count,0)}</span><span class="label">Stars</span></div>
+      <div class="stat-box"><span class="num">${repos.reduce((s,r)=>s+r.forks_count,0)}</span><span class="label">Forks</span></div>
     `;
     render(repos);
   } catch(e) {
-    document.getElementById('grid').innerHTML =
-      `<div id="empty">無法載入 — 請確認網路連線，或 GitHub API 速率限制。</div>`;
+    document.getElementById('grid').innerHTML = `<div id="empty">無法載入 — 請確認網路或 GitHub API 限制。</div>`;
   }
 }
 
 function card(r, i) {
   const color = LANG_COLORS[r.language] || '#64748b';
   return `
-  <div class="card" onclick="window.open('${r.html_url}','_blank')" style="animation-delay:${i*0.04}s;cursor:pointer">
+  <div class="card" onclick="window.open('${r.html_url}','_blank')" style="animation-delay:${i*0.035}s">
     <div class="card-name">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
       ${r.name}
     </div>
-    <div class="card-desc">${r.description || '<em style="opacity:.4">暫無描述</em>'}</div>
+    <div class="card-desc">${r.description || '<em style="opacity:.35">暫無描述</em>'}</div>
     <div class="card-footer">
       ${r.language ? `<span><span class="lang-dot" style="background:${color}"></span>${r.language}</span>` : ''}
       <span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         ${r.stargazers_count}
       </span>
       <span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v1a2 2 0 01-2 2H8a2 2 0 01-2-2V9M12 15v-3"/></svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v1a2 2 0 01-2 2H8a2 2 0 01-2-2V9M12 15v-3"/></svg>
         ${r.forks_count}
       </span>
       ${r.fork ? '<span class="tag-fork">fork</span>' : ''}
     </div>
     ${r.has_pages ? `<a class="btn-pages" href="https://Mux1r.github.io/${r.name}/" target="_blank" rel="noopener" onclick="event.stopPropagation()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
       View Live Site
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
     </a>` : ''}
   </div>`;
 }
 
 function render(list) {
+  document.getElementById('count').textContent = list.length + ' 個 repo';
   const grid = document.getElementById('grid');
   if (!list.length) { grid.innerHTML = '<div id="empty">找不到符合的 repo</div>'; return; }
   grid.innerHTML = list.map((r,i) => card(r,i)).join('');
