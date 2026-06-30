@@ -423,16 +423,20 @@ function repoGradient(name) {
   return `radial-gradient(ellipse at top left, hsl(${h} 70% 16%) 0%, hsl(${h2} 60% 11%) 50%, hsl(${h3} 65% 14%) 100%)`;
 }
 
+let clearTimer;
+
 function setBg(name) {
+  clearTimeout(clearTimer);
   overlay.style.background = repoGradient(name);
-  // already visible → swap background instantly, no opacity change
   if (overlay.style.opacity === '1') return;
   overlay.style.transition = 'opacity 0.5s cubic-bezier(0.4,0,0.2,1)';
   overlay.style.opacity = '1';
 }
 function clearBg() {
-  overlay.style.transition = 'opacity 1.8s cubic-bezier(0.4,0,0.2,1)';
-  overlay.style.opacity = '0';
+  clearTimer = setTimeout(() => {
+    overlay.style.transition = 'opacity 1.8s cubic-bezier(0.4,0,0.2,1)';
+    overlay.style.opacity = '0';
+  }, 120);
 }
 
 let repos = [];
