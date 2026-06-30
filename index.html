@@ -407,15 +407,13 @@ function repoColor(name) {
   return `hsl(${h},65%,62%)`;
 }
 
-function updateBg(list) {
-  if (!list.length) return;
-  const step = Math.max(1, Math.floor(list.length / 4));
-  const picks = [0, step, step*2, step*3].map(i => list[Math.min(i, list.length-1)].name);
-  const stops = picks.map((name, i) => {
-    const h = [...name].reduce((a,c) => (a*31 + c.charCodeAt(0)) % 360, 0);
-    return `hsl(${h} 40% 12%) ${i * 33}%`;
-  });
-  document.body.style.background = `linear-gradient(135deg, ${stops.join(', ')})`;
+const DEFAULT_BG = 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)';
+
+function repoBg(name) {
+  const h = [...name].reduce((a,c) => (a*31 + c.charCodeAt(0)) % 360, 0);
+  const h2 = (h + 40) % 360;
+  const h3 = (h + 80) % 360;
+  return `linear-gradient(135deg, hsl(${h} 45% 10%) 0%, hsl(${h2} 40% 14%) 50%, hsl(${h3} 35% 11%) 100%)`;
 }
 
 let repos = [];
@@ -441,7 +439,7 @@ async function load() {
 function card(r, i) {
   const color = repoColor(r.name);
   return `
-  <div class="card" onclick="window.open('${r.html_url}','_blank')" style="animation-delay:${i*0.045}s;--c:${color}">
+  <div class="card" onclick="window.open('${r.html_url}','_blank')" onmouseenter="document.body.style.background='${repoBg(r.name)}'" onmouseleave="document.body.style.background=DEFAULT_BG" style="animation-delay:${i*0.045}s;--c:${color}">
     <div class="card-name">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
       ${r.name}
@@ -469,7 +467,6 @@ function card(r, i) {
 
 function render(list) {
   document.getElementById('count').textContent = list.length + ' 個 repo';
-  updateBg(list);
   const grid = document.getElementById('grid');
   if (!list.length) { grid.innerHTML = '<div id="empty">找不到符合的 repo</div>'; return; }
   grid.innerHTML = list.map((r,i) => card(r,i)).join('');
