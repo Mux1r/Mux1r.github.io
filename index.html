@@ -221,8 +221,9 @@
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
+    gap: 0;
   }
+  .card-wrap { padding: 8px; }
 
   .card {
     border-radius: 16px;
@@ -462,7 +463,8 @@ async function load() {
 function card(r, i) {
   const color = repoColor(r.name);
   return `
-  <div class="card" onclick="window.open('${r.html_url}','_blank')" onmouseenter="setBg('${r.name}')" onmouseleave="clearBg()" style="animation-delay:${i*0.045}s;--c:${color}">
+  <div class="card-wrap" onmouseenter="setBg('${r.name}')" onmouseleave="clearBg()">
+  <div class="card" onclick="window.open('${r.html_url}','_blank')" style="animation-delay:${i*0.045}s;--c:${color}">
     <div class="card-name">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
       ${r.name}
@@ -485,6 +487,7 @@ function card(r, i) {
       View Live Site
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
     </a>` : ''}
+  </div>
   </div>`;
 }
 
