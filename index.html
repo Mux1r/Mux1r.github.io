@@ -44,12 +44,10 @@
     display: flex;
   }
 
-  /* repo hover background — opacity crossfade for silky smooth transition */
   #bg-overlay {
     position: fixed; inset: 0; z-index: 0;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 2.2s cubic-bezier(0.4,0,0.2,1);
   }
 
   body::before, body::after {
@@ -427,9 +425,13 @@ function repoGradient(name) {
 
 function setBg(name) {
   overlay.style.background = repoGradient(name);
+  // already visible → swap background instantly, no opacity change
+  if (overlay.style.opacity === '1') return;
+  overlay.style.transition = 'opacity 0.5s cubic-bezier(0.4,0,0.2,1)';
   overlay.style.opacity = '1';
 }
 function clearBg() {
+  overlay.style.transition = 'opacity 1.8s cubic-bezier(0.4,0,0.2,1)';
   overlay.style.opacity = '0';
 }
 
