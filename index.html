@@ -44,7 +44,7 @@
     display: flex;
   }
 
-  #bg-overlay {
+  .bg-layer {
     position: fixed; inset: 0; z-index: 0;
     opacity: 0;
     pointer-events: none;
@@ -372,7 +372,8 @@
 </head>
 <body>
 
-<div id="bg-overlay"></div>
+<div class="bg-layer" id="bg-a"></div>
+<div class="bg-layer" id="bg-b"></div>
 <div id="intro">
   <div class="intro-logo">Mux1r</div>
   <div class="intro-bar"></div>
@@ -414,11 +415,11 @@ function repoColor(name) {
   return `hsl(${h},65%,62%)`;
 }
 
-const overlay = document.getElementById('bg-overlay');
+const layers = [document.getElementById('bg-a'), document.getElementById('bg-b')];
+let active = 0;
 
 function repoGradient(name) {
   const h = [...name].reduce((a,c) => (a*31 + c.charCodeAt(0)) % 360, 0);
-  // triadic: 0° / 120° / 240° — clean, saturated, dark enough to read text
   const h2 = (h + 120) % 360;
   const h3 = (h + 240) % 360;
   return `radial-gradient(ellipse at top left, hsl(${h} 70% 16%) 0%, hsl(${h2} 60% 11%) 50%, hsl(${h3} 65% 14%) 100%)`;
@@ -428,15 +429,18 @@ let clearTimer;
 
 function setBg(name) {
   clearTimeout(clearTimer);
-  overlay.style.background = repoGradient(name);
-  if (overlay.style.opacity === '1') return;
-  overlay.style.transition = 'opacity 0.5s cubic-bezier(0.4,0,0.2,1)';
-  overlay.style.opacity = '1';
+  const next = 1 - active;
+  layers[next].style.background = repoGradient(name);
+  layers[next].style.transition = 'opacity 0.7s cubic-bezier(0.4,0,0.2,1)';
+  layers[active].style.transition = 'opacity 0.7s cubic-bezier(0.4,0,0.2,1)';
+  layers[next].style.opacity = '1';
+  layers[active].style.opacity = '0';
+  active = next;
 }
 function clearBg() {
   clearTimer = setTimeout(() => {
-    overlay.style.transition = 'opacity 1.8s cubic-bezier(0.4,0,0.2,1)';
-    overlay.style.opacity = '0';
+    layers[active].style.transition = 'opacity 1.8s cubic-bezier(0.4,0,0.2,1)';
+    layers[active].style.opacity = '0';
   }, 120);
 }
 
