@@ -168,14 +168,16 @@
   .card-footer span { display: flex; align-items: center; gap: 3px; }
   .lang-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
   .btn-live {
-    margin-left: auto;
-    display: inline-flex; align-items: center; gap: 3px;
-    padding: 2px 7px; border-radius: 999px;
-    background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.22);
-    color: rgba(147,197,253,0.8); font-size: 0.62rem; font-weight: 600;
-    text-decoration: none; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 0;
+    background: linear-gradient(135deg, rgba(96,165,250,0.15), rgba(167,139,250,0.15));
+    border-top: 1px solid rgba(96,165,250,0.2);
+    color: rgba(147,197,253,0.88); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em;
+    text-decoration: none;
+    transition: background 0.2s;
+    flex-shrink: 0;
   }
-  .btn-live:hover { background: rgba(96,165,250,0.22); }
+  .btn-live:hover { background: linear-gradient(135deg, rgba(96,165,250,0.28), rgba(167,139,250,0.28)); }
 
   #empty {
     grid-column: 1/-1; text-align: center;
@@ -302,12 +304,12 @@ function card(r, i) {
             <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             ${r.stargazers_count}
           </span>
-          ${r.has_pages ? `<a class="btn-live" href="https://Mux1r.github.io/${r.name}/" target="_blank" rel="noopener" onclick="event.stopPropagation()">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10z"/></svg>
-            Live
-          </a>` : ''}
         </div>
       </div>
+      ${r.has_pages ? `<a class="btn-live" href="https://Mux1r.github.io/${r.name}/" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10z"/></svg>
+        View Live Site
+      </a>` : ''}
     </div>
   </div>`;
 }
