@@ -41,12 +41,11 @@
 
   /* ── Profile ── */
   .profile {
-    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-    padding: 14px 28px;
+    display: flex; align-items: center; gap: 18px;
+    padding: 14px 28px; flex-shrink: 0;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(24px);
-    position: relative; z-index: 2; flex-shrink: 0;
+    background: rgba(255,255,255,0.03); backdrop-filter: blur(24px);
+    position: relative; z-index: 2;
     animation: slideDown 0.6s cubic-bezier(0.22,1,0.36,1) 0.8s both;
   }
   @keyframes slideDown {
@@ -54,14 +53,14 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.18); flex-shrink: 0; }
+  .avatar { width: 48px; height: 48px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.18); flex-shrink: 0; }
 
   .profile-info h1 {
-    font-size: 1.2rem; font-weight: 700;
+    font-size: 1.15rem; font-weight: 700;
     background: linear-gradient(135deg, #a78bfa, #60a5fa, #f0abfc);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .subtitle { font-size: 0.7rem; color: rgba(226,232,240,0.36); margin-top: 2px; }
+  .subtitle { font-size: 0.68rem; color: rgba(226,232,240,0.34); margin-top: 2px; }
 
   .github-link {
     display: inline-flex; align-items: center; gap: 6px;
@@ -74,11 +73,11 @@
 
   .stats-grid { display: flex; gap: 8px; }
   .stat-box {
-    text-align: center; padding: 5px 13px;
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+    text-align: center; padding: 5px 12px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px;
   }
-  .stat-box .num { display: block; font-size: 0.95rem; font-weight: 700; color: #c4b5fd; }
-  .stat-box .lbl { display: block; font-size: 0.6rem; color: rgba(226,232,240,0.3); margin-top: 1px; }
+  .stat-box .num { display: block; font-size: 0.9rem; font-weight: 700; color: #c4b5fd; }
+  .stat-box .lbl { display: block; font-size: 0.58rem; color: rgba(226,232,240,0.28); margin-top: 1px; }
 
   .search-wrap { position: relative; margin-left: auto; width: 180px; }
   .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); opacity: 0.3; pointer-events: none; }
@@ -91,129 +90,104 @@
   #search:focus { border-color: rgba(167,139,250,0.4); }
   #search::placeholder { color: rgba(226,232,240,0.24); }
 
-  /* ── Stage ── */
-  .stage {
-    flex: 1; position: relative; z-index: 1;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
+  /* ── Grid area ── */
+  .grid-area {
+    flex: 1; overflow-y: auto; position: relative; z-index: 1;
+    padding: 20px 24px 32px;
+    animation: fadeIn 0.5s ease 1s both;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .grid-area::-webkit-scrollbar { width: 5px; }
+  .grid-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+  .repo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
   }
 
-  .empty-hint {
-    font-size: 0.78rem; color: rgba(226,232,240,0.16);
-    letter-spacing: 0.12em; text-transform: uppercase;
-    transition: opacity 0.35s; pointer-events: none;
+  /* ── Repo card ── */
+  .repo-card {
+    border-radius: 16px; overflow: hidden;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1),
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+    animation: cardUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
   }
-  .empty-hint.hidden { opacity: 0; }
-
-  .detail-card {
-    position: absolute;
-    width: 380px; max-width: calc(100vw - 48px);
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.13);
-    border-radius: 20px; padding: 26px 28px;
-    backdrop-filter: blur(24px);
-    display: flex; flex-direction: column; gap: 14px;
-    opacity: 0; pointer-events: none;
-    transform: translateY(14px) scale(0.95);
-    transition: opacity 0.3s cubic-bezier(0.4,0,0.2,1),
-                transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  .repo-card:hover {
+    transform: translateY(-6px);
+    border-color: color-mix(in srgb, var(--c) 50%, transparent);
+    box-shadow: 0 14px 40px color-mix(in srgb, var(--c) 22%, transparent),
+                0 0 0 1px color-mix(in srgb, var(--c) 18%, transparent);
   }
-  .detail-card.visible { opacity: 1; transform: none; pointer-events: auto; }
-  .detail-card.out { opacity: 0; transform: scale(0.97); transition-duration: 0.12s, 0.12s; }
-
-  .dc-name { font-size: 1.2rem; font-weight: 700; color: #c4b5fd; display: flex; align-items: center; gap: 8px; }
-  .dc-desc { font-size: 0.84rem; color: rgba(226,232,240,0.5); line-height: 1.65; min-height: 2.5em; }
-  .dc-meta {
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    font-size: 0.75rem; color: rgba(226,232,240,0.35);
-    padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.07);
-  }
-  .dc-meta span { display: flex; align-items: center; gap: 4px; }
-  .lang-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
-  .tag-fork {
-    margin-left: auto; padding: 2px 7px; border-radius: 999px;
-    background: rgba(251,191,36,0.1); color: rgba(251,191,36,0.6);
-    font-size: 0.66rem; border: 1px solid rgba(251,191,36,0.18);
-  }
-  .btn-row { display: flex; gap: 8px; }
-  .btn-gh, .btn-pages {
-    flex: 1; display: flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 10px 0; border-radius: 11px;
-    font-size: 0.81rem; font-weight: 600;
-    text-decoration: none; border: 1px solid;
-    transition: transform 0.15s, background 0.2s;
-  }
-  .btn-gh {
-    background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1);
-    color: rgba(226,232,240,0.7); cursor: pointer;
-  }
-  .btn-gh:hover { background: rgba(255,255,255,0.11); transform: translateY(-1px); }
-  .btn-pages {
-    background: linear-gradient(135deg, rgba(96,165,250,0.14), rgba(167,139,250,0.14));
-    border-color: rgba(96,165,250,0.26); color: rgba(186,214,254,0.9);
-  }
-  .btn-pages:hover {
-    background: linear-gradient(135deg, rgba(96,165,250,0.24), rgba(167,139,250,0.24));
-    transform: translateY(-1px);
-  }
-
-  /* ── Dock ── */
-  .dock-wrap {
-    flex-shrink: 0; position: relative; z-index: 2;
-    display: flex; justify-content: center;
-    padding: 0 24px 20px;
-    animation: slideUp 0.6s cubic-bezier(0.22,1,0.36,1) 0.9s both;
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(28px); }
+  @keyframes cardUp {
+    from { opacity: 0; transform: translateY(18px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .dock {
-    display: flex; align-items: flex-end;
-    padding: 10px 14px 12px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(32px);
-    border: 1px solid rgba(255,255,255,0.13);
-    border-radius: 22px;
-    overflow-x: auto; overflow-y: visible;
-    max-width: calc(100vw - 48px);
-    scrollbar-width: none;
-  }
-  .dock::-webkit-scrollbar { display: none; }
-
-  .dock-item {
-    flex-shrink: 0; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 0 5px;
-    transform: scale(var(--scale, 1));
-    transform-origin: bottom center;
-    transition: transform 0.13s cubic-bezier(0.34,1.56,0.64,1);
-  }
-
-  .dock-icon {
-    width: 52px; height: 52px; border-radius: 13px;
+  /* icon area */
+  .card-icon {
+    height: 88px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.9rem; font-weight: 800; letter-spacing: -0.02em;
-    color: rgba(255,255,255,0.95);
-    border: 1px solid rgba(255,255,255,0.18);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.14);
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-    transition: box-shadow 0.25s;
+    font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    position: relative; overflow: hidden;
+    flex-shrink: 0;
   }
-  .dock-item.active .dock-icon {
-    box-shadow: 0 8px 28px rgba(0,0,0,0.5),
-                0 0 0 2px rgba(255,255,255,0.4),
-                inset 0 1px 0 rgba(255,255,255,0.2);
+  .card-icon::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.25));
   }
 
-  .dock-dot {
-    width: 4px; height: 4px; border-radius: 50%;
-    background: rgba(255,255,255,0.65);
-    margin-top: 5px;
-    opacity: 0; transition: opacity 0.2s;
+  /* body */
+  .card-body {
+    padding: 11px 13px 12px;
+    display: flex; flex-direction: column; gap: 6px;
+    flex: 1;
+    background: rgba(0,0,0,0.15);
   }
-  .dock-item.active .dock-dot { opacity: 1; }
+
+  .card-name {
+    font-size: 0.8rem; font-weight: 600; color: rgba(226,232,240,0.88);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .card-desc {
+    font-size: 0.72rem; color: rgba(226,232,240,0.42);
+    line-height: 1.45;
+    display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; min-height: 2.1em;
+  }
+
+  .card-footer {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 0.68rem; color: rgba(226,232,240,0.35);
+    margin-top: auto; padding-top: 7px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .card-footer span { display: flex; align-items: center; gap: 3px; }
+  .lang-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+  .btn-live {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 999px;
+    background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.25);
+    color: rgba(147,197,253,0.85); font-size: 0.65rem; font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-live:hover { background: rgba(96,165,250,0.22); }
+
+  #empty {
+    grid-column: 1/-1; text-align: center;
+    color: rgba(226,232,240,0.25); padding: 80px 0; font-size: 0.88rem;
+  }
 </style>
 </head>
 <body>
@@ -247,13 +221,8 @@
   </div>
 </header>
 
-<div class="stage">
-  <p class="empty-hint" id="hint">Hover a repo</p>
-  <div class="detail-card" id="detail-card"></div>
-</div>
-
-<div class="dock-wrap">
-  <div class="dock" id="dock"></div>
+<div class="grid-area">
+  <div class="repo-grid" id="grid"></div>
 </div>
 
 <script>
@@ -264,8 +233,10 @@ function repoColor(name) {
 }
 function repoGradient(name) {
   const h = [...name].reduce((a,c) => (a*31+c.charCodeAt(0))%360, 0);
-  const h2 = (h+120)%360, h3 = (h+240)%360;
-  return `radial-gradient(ellipse at top left, hsl(${h} 70% 16%) 0%, hsl(${h2} 60% 11%) 50%, hsl(${h3} 65% 14%) 100%)`;
+  return `radial-gradient(ellipse at top left, hsl(${h} 70% 16%) 0%, hsl(${(h+120)%360} 60% 11%) 50%, hsl(${(h+240)%360} 65% 14%) 100%)`;
+}
+function initials(name) {
+  return name.replace(/[-_]/g,' ').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase() || name[0].toUpperCase();
 }
 
 // bg crossfade
@@ -288,105 +259,40 @@ function clearBg() {
   }, 120);
 }
 
-// dock magnification
-const RANGE = 160, MAX_SCALE = 2.2;
-let dockItems = [];
-function updateMagnify(mouseX) {
-  dockItems.forEach(el => {
-    const r = el.getBoundingClientRect();
-    const dist = Math.abs(mouseX - (r.left + r.width/2));
-    const s = dist < RANGE ? 1 + (MAX_SCALE-1)*((Math.cos(dist/RANGE*Math.PI)+1)/2) : 1;
-    el.style.setProperty('--scale', s.toFixed(3));
-  });
-}
-function resetMagnify() {
-  dockItems.forEach(el => el.style.setProperty('--scale', '1'));
-}
-
-// detail card
-const detailEl = document.getElementById('detail-card');
-const hintEl   = document.getElementById('hint');
-let currentName = null;
-
-function initials(name) {
-  return name.replace(/[-_]/g,' ').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase() || name[0].toUpperCase();
-}
-
-function fillDetail(repo) {
-  const c = repoColor(repo.name);
-  detailEl.innerHTML = `
-    <div class="dc-name">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
-      ${repo.name}
-    </div>
-    <div class="dc-desc">${repo.description || '<em style="opacity:.32">暫無描述</em>'}</div>
-    <div class="dc-meta">
-      ${repo.language ? `<span><span class="lang-dot" style="background:${c}"></span>${repo.language}</span>` : ''}
-      <span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        ${repo.stargazers_count}
-      </span>
-      <span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v1a2 2 0 01-2 2H8a2 2 0 01-2-2V9M12 15v-3"/></svg>
-        ${repo.forks_count}
-      </span>
-      ${repo.fork ? '<span class="tag-fork">fork</span>' : ''}
-    </div>
-    <div class="btn-row">
-      <button class="btn-gh" onclick="window.open('${repo.html_url}','_blank')">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-        GitHub
-      </button>
-      ${repo.has_pages ? `<a class="btn-pages" href="https://Mux1r.github.io/${repo.name}/" target="_blank" rel="noopener">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-        Live Site
-      </a>` : ''}
-    </div>`;
-}
-
-function showDetail(repo) {
-  if (repo.name === currentName) return;
-  const wasVisible = detailEl.classList.contains('visible');
-  currentName = repo.name;
-  setBg(repo.name);
-  dockItems.forEach(el => el.classList.toggle('active', el.dataset.name === repo.name));
-  hintEl.classList.add('hidden');
-
-  if (wasVisible) {
-    detailEl.classList.add('out');
-    setTimeout(() => { fillDetail(repo); detailEl.classList.remove('out'); }, 130);
-  } else {
-    fillDetail(repo);
-    requestAnimationFrame(() => requestAnimationFrame(() => detailEl.classList.add('visible')));
-  }
-}
-
-function hideDetail() {
-  clearBg(); currentName = null;
-  detailEl.classList.remove('visible');
-  hintEl.classList.remove('hidden');
-  dockItems.forEach(el => el.classList.remove('active'));
-}
-
-// build
 let repos = [];
-function buildDock(list) {
-  const dock = document.getElementById('dock');
-  dock.innerHTML = list.map(r => {
-    const color = repoColor(r.name);
-    return `<div class="dock-item" data-name="${r.name}">
-      <div class="dock-icon" style="background:linear-gradient(145deg,${color},color-mix(in srgb,${color} 55%,#000))">${initials(r.name)}</div>
-      <div class="dock-dot"></div>
-    </div>`;
-  }).join('');
 
-  dockItems = [...dock.querySelectorAll('.dock-item')];
-  dockItems.forEach((el, i) => {
-    el.addEventListener('mouseenter', () => showDetail(list[i]));
-    el.addEventListener('click', () => window.open(list[i].html_url, '_blank'));
-  });
-  dock.addEventListener('mousemove', e => updateMagnify(e.clientX));
-  dock.addEventListener('mouseleave', () => { resetMagnify(); hideDetail(); });
+function card(r, i) {
+  const color = repoColor(r.name);
+  const ini   = initials(r.name);
+  const dark  = `color-mix(in srgb,${color} 55%,#000)`;
+  return `
+  <div class="repo-card" style="--c:${color};animation-delay:${i*0.03}s"
+    onclick="window.open('${r.html_url}','_blank')"
+    onmouseenter="setBg('${r.name}')"
+    onmouseleave="clearBg()">
+    <div class="card-icon" style="background:linear-gradient(145deg,${color},${dark})">${ini}</div>
+    <div class="card-body">
+      <div class="card-name">${r.name}</div>
+      <div class="card-desc">${r.description || '<em style="opacity:.3">暫無描述</em>'}</div>
+      <div class="card-footer">
+        ${r.language ? `<span><span class="lang-dot" style="background:${color}"></span>${r.language}</span>` : ''}
+        <span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          ${r.stargazers_count}
+        </span>
+        ${r.has_pages ? `<a class="btn-live" href="https://Mux1r.github.io/${r.name}/" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10z"/></svg>
+          Live
+        </a>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function render(list) {
+  const grid = document.getElementById('grid');
+  if (!list.length) { grid.innerHTML = '<div id="empty">找不到符合的 repo</div>'; return; }
+  grid.innerHTML = list.map((r,i) => card(r,i)).join('');
 }
 
 async function load() {
@@ -397,23 +303,21 @@ async function load() {
       <div class="stat-box"><span class="num">${repos.length}</span><span class="lbl">Repos</span></div>
       <div class="stat-box"><span class="num">${repos.reduce((s,r)=>s+r.stargazers_count,0)}</span><span class="lbl">Stars</span></div>
       <div class="stat-box"><span class="num">${repos.reduce((s,r)=>s+r.forks_count,0)}</span><span class="lbl">Forks</span></div>`;
-    buildDock(repos);
+    render(repos);
     setTimeout(() => document.getElementById('intro').classList.add('gone'), 200);
   } catch(e) {
-    document.getElementById('dock').innerHTML = '<p style="color:rgba(226,232,240,0.35);padding:20px;font-size:.82rem">無法載入</p>';
+    document.getElementById('grid').innerHTML = '<div id="empty">無法載入</div>';
     document.getElementById('intro').classList.add('gone');
   }
 }
 
 document.getElementById('search').addEventListener('input', e => {
   const q = e.target.value.toLowerCase();
-  const filtered = q ? repos.filter(r =>
+  render(q ? repos.filter(r =>
     r.name.toLowerCase().includes(q) ||
     (r.description||'').toLowerCase().includes(q) ||
     (r.language||'').toLowerCase().includes(q)
-  ) : repos;
-  hideDetail();
-  buildDock(filtered);
+  ) : repos);
 });
 
 load();
