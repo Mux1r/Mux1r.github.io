@@ -123,32 +123,10 @@
   }
   @keyframes fadeUp { from { opacity:0; } to { opacity:1; } }
 
-  /* icon area */
-  .card-icon {
-    height: 84px; position: relative; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-  }
-  .card-icon::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.22));
-    pointer-events: none;
-  }
-  .card-ini {
-    font-size: 1.45rem; font-weight: 800; letter-spacing: -0.03em;
-    color: rgba(255,255,255,0.9); text-shadow: 0 2px 8px rgba(0,0,0,0.45);
-    user-select: none;
-  }
-  .card-favicon {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: contain; padding: 18px; z-index: 1;
-  }
-
   /* body */
   .card-body {
-    padding: 10px 12px 11px;
-    background: rgba(0,0,0,0.14);
-    display: flex; flex-direction: column; gap: 5px; flex: 1;
+    padding: 14px 14px 12px;
+    display: flex; flex-direction: column; gap: 6px; flex: 1;
   }
   .card-name {
     font-size: 0.78rem; font-weight: 600; color: rgba(226,232,240,0.87);
@@ -159,14 +137,6 @@
     display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
     -webkit-box-orient: vertical; overflow: hidden; min-height: 2em;
   }
-  .card-footer {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    font-size: 0.65rem; color: rgba(226,232,240,0.32);
-    margin-top: auto; padding-top: 6px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .card-footer span { display: flex; align-items: center; gap: 3px; }
-  .lang-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
   .btn-live {
     display: flex; align-items: center; justify-content: center; gap: 6px;
     padding: 10px 0;
@@ -230,10 +200,6 @@ function repoGradient(name) {
   const h = [...name].reduce((a,c)=>(a*31+c.charCodeAt(0))%360, 0);
   return `radial-gradient(ellipse at top left, hsl(${h} 70% 16%) 0%, hsl(${(h+120)%360} 60% 11%) 50%, hsl(${(h+240)%360} 65% 14%) 100%)`;
 }
-function initials(name) {
-  return name.replace(/[-_]/g,' ').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase() || name[0].toUpperCase();
-}
-
 // bg crossfade
 const layers = [document.getElementById('bg-a'), document.getElementById('bg-b')];
 let active = 0, clearTimer;
@@ -282,29 +248,12 @@ function resetMagnify() {
 
 // card template
 function card(r, i) {
-  const color = repoColor(r.name);
-  const dark  = `color-mix(in srgb,${color} 50%,#000)`;
-  const ini   = initials(r.name);
-  const faviconTag = r.has_pages
-    ? `<img class="card-favicon" src="https://Mux1r.github.io/${r.name}/favicon.ico" onerror="this.remove()" loading="lazy">`
-    : '';
   return `
   <div class="card-wrap" style="animation-delay:${i*0.025}s">
     <div class="repo-card" data-name="${r.name}" onclick="window.open('${r.html_url}','_blank')">
-      <div class="card-icon" style="background:linear-gradient(145deg,${color},${dark})">
-        <span class="card-ini">${ini}</span>
-        ${faviconTag}
-      </div>
       <div class="card-body">
         <div class="card-name">${r.name}</div>
         <div class="card-desc">${r.description || '<em style="opacity:.28">暫無描述</em>'}</div>
-        <div class="card-footer">
-          ${r.language ? `<span><span class="lang-dot" style="background:${color}"></span>${r.language}</span>` : ''}
-          <span>
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            ${r.stargazers_count}
-          </span>
-        </div>
       </div>
       ${r.has_pages ? `<a class="btn-live" href="https://Mux1r.github.io/${r.name}/" target="_blank" rel="noopener" onclick="event.stopPropagation()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10z"/></svg>
